@@ -1,2 +1,5 @@
+# Ignore config files with secrets
+/backend/config.json
 node_modules
 .env
+
