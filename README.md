@@ -93,9 +93,3 @@ Pull requests are welcome. For major changes, please open an issue first to disc
 
 This project is licensed under the MIT License.
 
-```
-
----
-
-Let me know if you want me to include screenshots, a demo GIF, or step-by-step deployment instructions too.
-```
