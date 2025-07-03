@@ -6,7 +6,8 @@ const PORT = process.env.PORT;
 const express = require('express');
 const cors = require('cors');
 const app = express();
-// const path = require('path');
+const path = require('path');
+
 
 const jwt = require('jsonwebtoken');
 const { authenticateToken } = require('./utilities');
@@ -352,12 +353,17 @@ app.get("/search-note", authenticateToken, async (req, res) => {
     }
 })
 
-// const __dirname__ = path.resolve();
+const path = require('path');
 
-// app.use(express.static(path.join(__dirname__,'frontend', 'dist')));
-// app.get('/*', (req, res) => {
-//     res.sendFile(path.join(__dirname__,"frontend", "dist", "index.html"));
-// })
+// Serve static files from the frontend build folder
+app.use(express.static(path.join(__dirname, 'frontend', 'dist')));
+
+// Catch all unmatched routes and serve index.html
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'frontend', 'dist', 'index.html'));
+});
+
+
 
 app.listen(PORT);
 
