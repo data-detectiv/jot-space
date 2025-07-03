@@ -1,16 +1,18 @@
-require('dotenv').config();
-const config = require('./config.json')
+require('dotenv').config({path: '../.env'});
 const mongoose = require('mongoose');
-mongoose.connect(config.connectionString);
+mongoose.connect(process.env.MONGO_URI);
+const PORT = process.env.PORT;
 
 const express = require('express');
 const cors = require('cors');
 const app = express();
+// const path = require('path');
 
 const jwt = require('jsonwebtoken');
 const { authenticateToken } = require('./utilities');
 const User = require('./models/user.model');
 const Note = require('./models/note.model');
+
 
 app.use(express.json());
 
@@ -350,6 +352,13 @@ app.get("/search-note", authenticateToken, async (req, res) => {
     }
 })
 
-app.listen(8000);
+// const __dirname__ = path.resolve();
+
+// app.use(express.static(path.join(__dirname__,'frontend', 'dist')));
+// app.get('/*', (req, res) => {
+//     res.sendFile(path.join(__dirname__,"frontend", "dist", "index.html"));
+// })
+
+app.listen(PORT);
 
 module.exports = app;
