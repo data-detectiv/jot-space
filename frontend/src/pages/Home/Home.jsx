@@ -15,8 +15,13 @@ const Home = () => {
   });
 
   const [userInfo, setUserInfo] = useState(null);
+  const [allNotes, setAllNotes] = useState([]);
 
   const navigate = useNavigate();
+
+  const handleEdit = (noteDetails) => {
+    setOpenAddEditModal({ isShown: true, data: noteDetails, type: "edit"});
+  };
 
   // get user info
   const getUserInfo = async () => {
@@ -34,28 +39,44 @@ const Home = () => {
     }
   };
 
-  useEffect(() => {
-    getUserInfo()
-    return () => {
+  // get all notes
+  const getAllNotes = async () => {
+    try {
+      const response = await axiosInstance.get("/get-all-note");
+      if (response.data && response.data.notes) {
+        setAllNotes(response.data.notes);
+      } 
 
+    } catch (err) {
+      console.log("An unexpected error occurred. Please try again.");
     }
-  }, [])
+  }
+
+  useEffect(() => {
+    getAllNotes();
+    getUserInfo();
+    return () => {};
+  }, []);
+
 
   return (
     <>
       <Navbar userInfo={userInfo}/>
       <div className="container mx-auto">
         <div className="grid grid-cols-3 gap-4 mt-8">
-          <NoteCard 
-            title="Meeting on 7th April"
-            date="3rd Apr 2025"
-            content="Meeting on 7th April Meeting on 7th April"
-            tags="#Meeting"
-            isPinned={true}
-            onEdit={() => {}}
-            onDelete={() => {}}
-            onPinNote={() => {}}
-          />
+          {allNotes.map((item, index) => (
+             <NoteCard 
+              key={item._id}
+              title={item.title}
+              date={item.createdOn}
+              content={item.content}
+              tags={item.tags}
+              isPinned={item.isPinned}
+              onEdit={() => handleEdit(item)}
+              onDelete={() => {}}
+              onPinNote={() => {}}
+            />
+          ))}
         </div>
       </div>
       <button className="w-16 h-16 flex items-center justify-center rounded-2xl bg-primary hover:bg-blue-600 absolute right-10 bottom-10 cursor-pointer" onClick={() => {
@@ -80,6 +101,7 @@ const Home = () => {
           }}
           type={openAddEditModal.type}
           noteData={openAddEditModal.data}
+          getAllNotes={getAllNotes}
         />
       </Modal>
     </>

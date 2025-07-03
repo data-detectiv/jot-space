@@ -232,11 +232,10 @@ app.put("/edit-note/:noteId", authenticateToken, async (req, res) => {
 
 // get all note
 app.get("/get-all-note", authenticateToken, async (req, res) => {
-    const { user } = req.user;
+    const { user }  = req.user;
 
     try {
         const notes = await Note.find({ userId: user._id}).sort({ isPinned: -1});
-
         return res.json({
             error: false,
             notes,
@@ -250,6 +249,7 @@ app.get("/get-all-note", authenticateToken, async (req, res) => {
         })
     }
 });
+
 
 // delete note
 app.delete("/delete-note/:noteId", authenticateToken, async (req, res) => {
